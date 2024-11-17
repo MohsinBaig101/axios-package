@@ -115,7 +115,7 @@
                 "property-declaration": "nospace",
                 "variable-declaration": "nospace"
             }
-        ],
+        ], 
         "variable-name": false,
         "whitespace": [
             true,
