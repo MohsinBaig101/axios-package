@@ -1,0 +1,24 @@
+{
+  "coverageDirectory": "coverage",
+  "collectCoverageFrom": [
+    "src/**/*.{ts,js}",
+    "src/lib/**/*.{ts,js}",
+    "!src/api/errors/**/*.{ts,js}",
+    "!src/lib/error/**/*.{ts,js}",
+    "!**/node_modules/**"
+  ],
+  "transform": {
+    ".(ts|tsx)": "<rootDir>/test/preprocessor.js"
+  },
+  "testMatch": [
+    "**/test/**/*test.ts"
+  ],
+  "moduleFileExtensions": [
+    "ts",
+    "tsx",
+    "js",
+    "json"
+  ],
+  "testEnvironment": "node",
+  "verbose": true
+}
