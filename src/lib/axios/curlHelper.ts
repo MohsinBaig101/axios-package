@@ -1,6 +1,8 @@
+import { AxiosRequestConfig } from "axios";
+
 export class CurlHelper {
     public static instance: CurlHelper;
-    public static generateCommand(config: any, inline: boolean = false): string {
+    public static generateCommand(config: AxiosRequestConfig, inline: boolean = false): string {
         this.instance = new CurlHelper(config);
         let command =
             `curl -L ${this.instance.getMethod()} '${this.instance.getUrl()}

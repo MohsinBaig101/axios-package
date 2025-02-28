@@ -1,27 +1,31 @@
 import { CurlHelper } from './curlHelper';
 import { env } from '../../../env';
+import type { AxiosError, AxiosRequestConfig } from 'axios';
+import { CustomAxiosRequestConfig, CustomAxiosResponseConfig } from '../../interfaces/HttpClient';
 
-export const logApiRequest = (config: any) => {
+export const logApiRequest = (config: AxiosRequestConfig) => {
     // for curl logger
     if (env.constants.enableCurl) {
         console.log(CurlHelper.generateCommand(config, env.constants.inlineCurl));
     }
 }
-export const logApiResponse = (response: any) => {
+export const logApiResponse = (response: CustomAxiosResponseConfig) => {
     if (env.constants.enableApiInterceptorLog) {
-        response.config.metadata.endTime = new Date();
-        response.duration = response.config.metadata.endTime - response.config.metadata.starttime;
+        const config = response.config as CustomAxiosRequestConfig;
+        config.metadata.endTime = new Date();
+        response.duration = config.metadata.endTime.getTime() - config.metadata.startTime.getTime() || 0;
         const { config: { url }, data, duration } = response;
-        const printData = jsonStringify(data).length < 25000; // Don't print PDF bytes
+        const printData = jsonStringify(data).length < 25000; // Don't print File bytes
         const logData = { url, duration, ...(printData) ? { data } : {} }
         console.log(env.isProduction ? jsonStringify(logData) : logData);
     }
 }
 
-export const logApiError = (error: any) => {
+export const logApiError = (error: AxiosError) => {
     if (env.constants.enableApiInterceptorLog && error.config) {
-        error.config.metadata.endTime = new Date();
-        error.duration = error.config.metadata.endTime - error.config.metadata.startTime;
+        const config = error.config as CustomAxiosRequestConfig;
+        config.metadata.endTime = new Date();
+        (error as any).duration = config.metadata.endTime.getTime() - config.metadata.startTime.getTime();
         console.log(error);
         const { response: { status, statusText, data, config: { url } = {} as any, duration } = {} as any } = error;
         const logData = { url, duration, status, statusText, data };
@@ -29,7 +33,7 @@ export const logApiError = (error: any) => {
     }
 }
 
-const jsonStringify = (json) => {
+const jsonStringify = (json: unknown) => {
     try {
         return JSON.stringify(json);
     } catch (err) {

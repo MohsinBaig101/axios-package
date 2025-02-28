@@ -1,27 +1,26 @@
+import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from "axios";
 import { logApiError, logApiResponse, logApiRequest } from "./logApi";
+import type { CustomAxiosResponseConfig } from "../../interfaces/HttpClient";
 
-export const InitializeInterceptors = (axios: any): void => {
+export const InitializeInterceptors = (axios: AxiosInstance): void => {
     /**
      * log the request and mock the data if enabled
      * @param config 
      * @returns 
      */
-    const requestInterceptor = async (config: any): Promise<any> => {
-        config.metadata = { startTime: new Date() };
+    const requestInterceptor = async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
+        (config as any).metadata = { startTime: new Date() }; // Metadata is not a default property, so it's casted
         await logApiRequest(config);
-        // await hasMock(config);
         return config;
     }
 
-    const responseInterceptor = async (response: any): Promise<any> => {
-        await logApiResponse(response);
+    const responseInterceptor = async (response: AxiosResponse): Promise<AxiosResponse> => {
+        await logApiResponse(response as CustomAxiosResponseConfig);
         return Promise.resolve(response);
     }
 
-    const responseErrorInterceptor = async (error: any): Promise<any> => {
+    const responseErrorInterceptor = async (error: AxiosError): Promise<never> => {
         await logApiError(error);
-
-        // await isMock(error);
         return Promise.reject(error);
 
     };

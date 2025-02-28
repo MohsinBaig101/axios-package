@@ -36,9 +36,7 @@ export class HttpClientService {
         c2bToken: string
     }) {
         const { host, path, c2bToken } = serviceDetails;
-        // const { host, path, oAuth } = serviceDetails;
         this.url = `${host}${path}`;
-        // this.accessToken = new AccessToken(oAuth);
         this.accessToken = c2bToken;
         this.log = new Logger(__filename);
     }
