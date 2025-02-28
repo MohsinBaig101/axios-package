@@ -32,27 +32,6 @@ export function getPaths(paths: string[]): string[] {
     return paths.map(p => getPath(p));
 }
 
-export function getOsPath(key: string): string {
-    return getPath(getOsEnv(key));
-}
-// export function getOsEnvArray(key: string, delimiter: string = ','): string[] {
-//     return process.env[key] && process.env[key].split(delimiter) || [];
-// }
 export function getOsPaths(key: string): string[] {
     return getPaths(getOsEnvArray(key));
 }
-
-export const getEnvFile = <T>(depEnv: string, APP_ENV: T): string => {
-    if (process.env.NODE_ENV === "production") {
-        return ".env.test";
-    }
-
-    if (depEnv) {
-        const envFile = APP_ENV[depEnv.toUpperCase()];
-        if (envFile) {
-            return `aiq-v1-${depEnv.toLowerCase()}.env`;
-        }
-    }
-
-    return ".env";
-};
