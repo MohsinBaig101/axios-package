@@ -5,7 +5,6 @@ export const InitializeInterceptors = (axios) => {
         config.metadata = { startTime: new Date() };
 
         await logApiRequest(config);
-        // await hasMock(config);
         return config;
     }
 
@@ -13,19 +12,11 @@ export const InitializeInterceptors = (axios) => {
 
     const responseInterceptor = async (response: any): Promise<any> => {
         await logApiRequest(response);
-
         return Promise.resolve(response);
     }
 
     const responseErrorInterceptor = async (error: any): Promise<any> => {
         await logApiError(error);
-
-        // await isMock(error);
-
-        // const result = await handleException(error, axios);
-        // if (result && result.success) {
-        //     return result;
-        // }
     }
 
     axios.interceptors.request.use(requestInterceptor, error => Promise.reject(error));

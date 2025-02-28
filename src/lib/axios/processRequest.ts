@@ -5,7 +5,7 @@ import { isRequestDataPrintable, stringifyJSON } from '../env/helpers';
 
 export const processRequest = async ({ req, logger, startTime, axios, retryCount }) => {
     try {
-        const headersForLog: any = {
+        const headersForLog = {
             'Client-Timestamp': req?.headers['Client-Timestamp']
         };
         logger.info({
@@ -36,11 +36,26 @@ export const processRequest = async ({ req, logger, startTime, axios, retryCount
             headers: responseHeaders,
             success: true
         });
-    } catch (err: any) {
+    } catch (err: unknown) {
         const hasApiFailed = true;
-        const status = (err.isAxiosError && err.response) ? _.get(err, 'response.status') : 500;
-        const error = _.get(err, 'response.data') || _.get(err, 'message', 'Failed');
-        const { name: errorName, message: errorMessage, stack } = err;
+        let status = 500;
+        let error: unknown = 'Failed';
+        let errorName: string | undefined;
+        let errorMessage: string | undefined;
+        let stack: string | undefined;
+
+        if (err instanceof Error) {
+            errorName = err.name;
+            errorMessage = err.message;
+            stack = err.stack;
+        }
+
+        if (typeof err === 'object' && err !== null && 'isAxiosError' in err && 'response' in err) {
+            const axiosErr = err as { response?: { status?: number; data?: unknown } };
+            status = axiosErr.response?.status ?? 500;
+            error = axiosErr.response?.data ?? error;
+        }
+
         logger.error({
             type: 'EXTERNAL_RESPONSE',
             status: 'FAIL',
@@ -50,11 +65,11 @@ export const processRequest = async ({ req, logger, startTime, axios, retryCount
                 name: errorName,
                 message: errorMessage,
                 error: stringifyJSON(error),
-                ...((!env.isProduction) ? { stack } : {})
+                ...(!env.isProduction ? { stack } : {})
             },
             responseTime: moment().diff(moment(startTime))
         }, 'External API call failed');
-        err = undefined;
         return Promise.resolve({ status, error, hasApiFailed });
     }
+
 }
