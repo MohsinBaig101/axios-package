@@ -7,7 +7,7 @@ const logLevel = {
     60: 'fatal',
 };
 
-export class ConsoleRawStram {
+export class ConsoleRawStream {
     public write(rec: string): void {
         if (rec) {
             const parsedRed = JSON.parse(rec);

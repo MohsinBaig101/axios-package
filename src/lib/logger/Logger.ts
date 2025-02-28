@@ -1,7 +1,7 @@
 import * as path from 'path';
 import bunyan from 'bunyan';
 import { LogLevel } from './LogLevel';
-import { ConsoleRawStram } from './ConsoleRawStream';
+import { ConsoleRawStream } from './ConsoleRawStream';
 import { env } from '../../../env';
 
 export class Logger {
@@ -12,7 +12,7 @@ export class Logger {
             name: this._parsePath(name),
             streams: [
                 {
-                    stream: new ConsoleRawStram() as any,
+                    stream: new ConsoleRawStream() as any,
                 },
             ],
         });
