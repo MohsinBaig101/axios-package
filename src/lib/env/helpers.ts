@@ -15,7 +15,7 @@ export const isRequestDataPrintable = <T>(reqData: T): boolean => {
 
 export const shouldAxiosRetry = <T>(error: T): boolean => {
     const { status } = (error as any)?.response || {};
-    console.log("custom", env.config.retriesStatuses.includes(status as string), status, env.config.retriesStatuses);
+    console.log("custom",env, status, env.config.retriesStatuses);
     const isFound = env.config.retriesStatuses.findIndex(item => Number(item) === Number(status));
     if(isFound !== -1) return true;
     return false;

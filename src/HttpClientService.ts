@@ -78,7 +78,6 @@ export class HttpClientService {
 
     private async request(method: HttpMethod, path: string, headers: RequestHeaders, { ...args }: any): Promise<any> {
         const url = `${this.url}${path}`;
-        // const accessToken = await this.accessToken.get();
         const Authorization = `Bearer ${this.accessToken}`
         const requestHeaders = {
             Authorization,

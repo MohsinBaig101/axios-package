@@ -5,7 +5,7 @@ import { ConsoleRawStram } from './ConsoleRawStream';
 import { env } from '../../../env';
 
 export class Logger {
-    private logger: any;
+    private logger: bunyan.Logger;
 
     constructor(name: string = 'app') {
         this.logger = bunyan.createLogger({
@@ -44,7 +44,7 @@ export class Logger {
         }
     }
 
-    public error(err: any, additional?: unknown): void {
+    public error(err: Error, additional?: unknown): void {
         const merged = this._merge(err, additional);
         this._log(merged.msg || merged.message, merged, 'error');
     }
