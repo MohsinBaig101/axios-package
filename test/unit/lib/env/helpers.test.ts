@@ -6,7 +6,7 @@ jest.mock('../../../../env', () => ({
         },
     },
 }));
-import { filePath, stringifyJSON, isRequestDataPrintable, shouldAxiosRetry } from '../../../../src/lib/env/helpers'; // Adjust import path accordingly
+import { filePath, stringifyJSON, isRequestDataPrintable, shouldAxiosRetry } from '../../../../src/lib/env/helpers';
 
 describe('Utility functions', () => {
     
